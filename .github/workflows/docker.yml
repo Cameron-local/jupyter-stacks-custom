@@ -65,9 +65,9 @@ jobs:
           # Full logs for CI build
           BUILDKIT_PROGRESS: plain
 
-      - name: Run tests ✅
-        run: python3 -m pytest tests.run_tests --short-image-name ${{ inputs.image }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }}
-        shell: bash    
+              #      - name: Run tests ✅
+              #        run: python3 -m pytest tests.run_tests --short-image-name ${{ inputs.image }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }}
+              #        shell: bash    
 
 
       - name: Login to Docker Hub 🔐

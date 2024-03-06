@@ -42,9 +42,9 @@ jobs:
         matrix: 
           include:  
             - dockerfile: ./image/custom-datascience/Dockerfile
-              image: ghcr.io/mcam1010/custom-datascience
+              image: ghcr.io/mcam10/custom-datascience
             - dockerfile: ./image/tensorflow-notebook/Dockerfile
-              image: ghcr.io/mcam1010/tensorflow-notebook
+              image: ghcr.io/mcam10/tensorflow-notebook
     permissions:
       contents: read
       packages: write

@@ -37,13 +37,17 @@ concurrency:
 jobs:
   build-publish-images:
     runs-on: ubuntu-latest
+    strategy:
+        fail-fast: false
+        matrix: 
+          include:  
+            - dockerfile: ./image/custom-datascience/Dockerfile
+            - dockerfile: ./image/tensorflow-notebook/Dockerfile
     permissions:
       contents: read
       packages: write
 
     steps:
-      - name: Checkout Repo ⚡️
-        uses: actions/checkout@v4
 
       - name: Set Up Python 🐍
         uses: actions/setup-python@v5
@@ -78,7 +82,8 @@ jobs:
         #        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: image/custom-datascience
+          context: .
+          file: ${{ matrix.dockerfile }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

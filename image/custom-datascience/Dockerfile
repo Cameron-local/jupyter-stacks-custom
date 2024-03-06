@@ -1,5 +1,4 @@
 FROM quay.io/jupyter/datascience-notebook
-
 # Add RUN statements to install packages as the $NB_USER defined in the base images.
 
 # Add a "USER root" statement followed by RUN statements to install system packages using apt-get,

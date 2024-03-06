@@ -76,9 +76,9 @@ jobs:
 
       - name: Build image 🛠
         #        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
-        uses: docker/build-push-action
+        uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-         context: ./image/custom-datascience
-         push: true
-         tags: ${{ steps.meta.outputs.labels.tags }}
-         labels: ${{ steps.meta.outputs.labels }}
+          context: ./image/custom-datascience
+          push: true
+          tags: ${{ steps.meta.outputs.labels.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

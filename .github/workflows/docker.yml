@@ -62,7 +62,7 @@ jobs:
 #        run: python3 -m pytest tests.run_tests --short-image-name ${{ inputs.image }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }}
 
       - name: Log in to the Container registry 
-        uses: docker/login-action@@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -78,7 +78,7 @@ jobs:
         #        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: image
+          context: image/custom-datascience
           push: true
           tags: ${{ steps.meta.outputs.labels.tags }}
           labels: ${{ steps.meta.outputs.labels }}

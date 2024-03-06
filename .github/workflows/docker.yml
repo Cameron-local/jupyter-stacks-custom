@@ -2,7 +2,7 @@ name: Build, test, and publish Docker Images
 
 env:
   OWNER: "malik1010"
-  IMAGE_NAME: ${{ github.event.repository.name }}
+  IMAGE_NAME: ${{ github.repository }}
   REGISTRY: ghcr.io
 
 

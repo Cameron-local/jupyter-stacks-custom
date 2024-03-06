@@ -75,10 +75,10 @@ jobs:
           images: ${{ env.REGISTRY }}/${{env.IMAGE_NAME}}
 
       - name: Build image 🛠
-        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
+        #        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
         uses: docker/build-push-action
         with:
-         context: .
+         context: "image/**"
          push: true
          tags: ${{ steps.meta.outputs.labels.tags }}
          labels: ${{ steps.meta.outputs.labels }}

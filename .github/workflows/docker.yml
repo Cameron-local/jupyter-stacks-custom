@@ -78,7 +78,7 @@ jobs:
         #        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
         uses: docker/build-push-action
         with:
-         context: image/custom-datascience
+         context: ./image/custom-datascience
          push: true
          tags: ${{ steps.meta.outputs.labels.tags }}
          labels: ${{ steps.meta.outputs.labels }}

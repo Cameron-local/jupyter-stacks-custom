@@ -42,7 +42,9 @@ jobs:
         matrix: 
           include:  
             - dockerfile: ./image/custom-datascience/Dockerfile
+              image: ${{ env.REGISTRY }}/custom-datascience
             - dockerfile: ./image/tensorflow-notebook/Dockerfile
+              image: ${{ env.REGISTRY }}/tensorflow-notebook
     permissions:
       contents: read
       packages: write
@@ -78,7 +80,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.REGISTRY }}/${{env.IMAGE_NAME}}
+          images: ${{ matrix.image }}
 
       - name: Build image 🛠
         #        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'

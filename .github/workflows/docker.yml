@@ -3,6 +3,8 @@ name: Build, test, and publish Docker Images
 env:
   OWNER: "malik1010"
   IMAGE_NAME: ${{ github.event.repository.name }}
+  REGISTRY: ghcr.io
+
 
 # For more details on events that trigger workflows see:
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
@@ -33,10 +35,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-test-publish-images:
+  build-publish-images:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout Repo ⚡️
@@ -52,31 +55,30 @@ jobs:
           pip install --upgrade pip
           pip install --upgrade -r requirements-dev.txt
 
-      - name: Get commit sha, this will be used as a tag later on 🏷
-        shell: bash
-        run: |
-          echo "sha12=$(echo ${GITHUB_SHA} | cut -c1-12)" >> $GITHUB_OUTPUT
-        id: get_sha
+       # Run tests if you want          
+
+#      - name: Run tests ✅
+#        shell: bash    
+#        run: python3 -m pytest tests.run_tests --short-image-name ${{ inputs.image }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }}
+
+      - name: Log in to the Container registry 
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}   
+
+      - name: Extract metadata (tags, labels for Docker)
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{env.IMAGE_NAME}}
 
       - name: Build image 🛠
-        run: docker build --rm --force-rm --tag "malik1010"/${{ env.IMAGE_NAME }}:latest --tag "malik1010"/${{ env.IMAGE_NAME }}:${{steps.get_sha.outputs.sha12}} image/
-        env:
-          DOCKER_BUILDKIT: 1
-          # Full logs for CI build
-          BUILDKIT_PROGRESS: plain
-
-              #      - name: Run tests ✅
-              #        run: python3 -m pytest tests.run_tests --short-image-name ${{ inputs.image }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }}
-              #        shell: bash    
-
-
-      - name: Login to Docker Hub 🔐
-        if: github.ref == 'refs/heads/main'
-        uses: docker/login-action@v3
-        with:
-          username: "malik1010"
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Push Image to Docker Hub 📤
         if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
-        run: docker push --all-tags "malik1010"/${{ env.IMAGE_NAME }}
+        uses: docker/build-push-action
+        with:
+         context: .
+          push: true
+          tags: ${{ steps.meta.outputs.labels.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

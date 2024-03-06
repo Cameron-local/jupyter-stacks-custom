@@ -62,7 +62,7 @@ jobs:
 #        run: python3 -m pytest tests.run_tests --short-image-name ${{ inputs.image }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }}
 
       - name: Log in to the Container registry 
-        uses: docker/login-action@v4
+        uses: docker/login-action@@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}

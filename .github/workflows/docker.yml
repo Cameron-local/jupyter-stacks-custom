@@ -21,7 +21,7 @@ on:
 jobs:
   build-publish-images:
     name: "Build and publish" 
-    runs-on: ["self-hosted", "linux", "x64", "amazon"]
+    runs-on: ["self-hosted", "linux", "x64", "pmc-prod"]
     strategy:
         fail-fast: false
         matrix: 

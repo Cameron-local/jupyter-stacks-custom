@@ -21,7 +21,7 @@ on:
 jobs:
   build-publish-images:
     name: "Build and publish" 
-    runs-on: ["self-hosted"]
+    runs-on: ["linux", "arm64", "arm"]
     strategy:
         fail-fast: false
         matrix: 

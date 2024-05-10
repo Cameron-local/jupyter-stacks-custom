@@ -1,79 +1,26 @@
-name: Build, possibly test, and publish Docker Images
+name: How to manually trigger a workflow
 
-env:
-  IMAGE_NAME: ${{ github.repository }}
-  REGISTRY: ghcr.io
+# This describes the event that will trigger the workflow
+on: 
+    workflow_dispatch:
+      inputs:
+        username:
+          description: 'what is your github username?'
+          required: true
+        reason:
+          description: 'Why are you running this workflow manually?'
+          required: true
+          default: 'I am running tests before implementing an automated workflow'
 
-
-# For more details on events that trigger workflows see:
-# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - ".github/workflows/docker.yml"
-      - "image/**"
-      - "tests/**"
-      - "requirements-dev.txt"
-  workflow_dispatch:
-
+# This is the workflow/jobs that will be triggered by the events above
 jobs:
-  build-publish-images:
-    name: "Build and publish" 
+  tests_manual_workflow:
     runs-on: ["linux", "arm64", "arm"]
-    strategy:
-        fail-fast: false
-        matrix: 
-          include:  
-            - dockerfile: ./image/custom-datascience/Dockerfile
-              image: ghcr.io/mcam10/custom-datascience
-            - dockerfile: ./image/tensorflow-notebook/Dockerfile
-              image: ghcr.io/mcam10/tensorflow-notebook
-    permissions:
-      contents: read
-      packages: write
-
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Set Up Python 🐍
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3.x
-
-      - name: Install Dev Dependencies 📦
-        run: |
-          pip install --upgrade pip
-          pip install --upgrade -r requirements-dev.txt
-
-       # Run tests if you want          
-
-#      - name: Run tests ✅
-#        shell: bash    
-#        run: python3 -m pytest tests.run_tests --short-image-name ${{ inputs.image }} --registry ${{ env.REGISTRY }} --owner ${{ env.OWNER }}
-
-      - name: Log in to the Container registry 
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}   
-
-      - name: Extract metadata (tags, labels for Docker)
-        id: meta
-        uses: docker/metadata-action@c314eea2b27e3cb3c7d7be0618510234d8f6178e
-        with:
-          images: ${{ matrix.image }}
-
-      - name: Build image 🛠
-        #build depending on if branch or event name matches
-        #        if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ${{ matrix.dockerfile }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+    - name: Checkout
+      uses: actions/checkout@v4
+    - run: |
+        echo "User ${{ github.event.inputs.username }} ran a workflow manually."
+        echo "Because ${{ github.event.inputs.reason }}."
+        docker buildx version
+        docker buildx ls

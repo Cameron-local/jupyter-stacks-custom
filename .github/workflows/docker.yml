@@ -22,4 +22,5 @@ jobs:
     - run: |
         echo "User ${{ github.event.inputs.username }} ran a workflow manually."
         echo "Because ${{ github.event.inputs.reason }}."
-        sudo apt install -y docker-buildx 
+        sudo apt install -y docker-buildx
+        docker info

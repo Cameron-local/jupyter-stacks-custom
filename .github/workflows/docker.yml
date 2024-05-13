@@ -15,7 +15,7 @@ on:
 # This is the workflow/jobs that will be triggered by the events above
 jobs:
   tests_manual_workflow:
-    runs-on: ["linux", "arm64", "arm"]
+    runs-on: ["linux", "x64", "pmc-prod"]
     steps:
     - name: Checkout
       uses: actions/checkout@v4
